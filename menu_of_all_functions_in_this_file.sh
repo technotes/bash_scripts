@@ -70,7 +70,7 @@ function helpFunctionSplitStringOnCapitalLetters()
         # 5)    Then store an space char " " into the string variable
         # 6) Else store the char to the string variable as is
         # Example: Input = "funcMyHelpFunction" will give the following output = "func My Help Function"
-        readableFunctionName=$(echo ${readableFunctionName} | awk '{split($0, chars, ""); string = ""; for(i=1;i<=length(chars);i++) {if(match(chars[i], /[A-Z]/)) {string = string " " chars[i]; } else { string = string chars[i]; } }  printf("%s\n", string);}')
+        readableFunctionName=$(echo ${readableFunctionName} | awk '{n=split($0, chars, ""); string = ""; for(i=1;i<=n;i++) {if(match(chars[i], /[A-Z]/)) {string = string " " chars[i]; } else { string = string chars[i]; } }  printf("%s\n", string);}')
 }
 
 # Verify that the user input is corresponding to a valid option from the menu
