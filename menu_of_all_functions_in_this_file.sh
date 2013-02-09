@@ -118,16 +118,16 @@ function helpFunctionRunSpecificFunction()
         ${functionsList[$(echo $selecdtedMenuItem -2| bc)]}
 }
 
-# Example test function to demonstrate the functionality. This function will be called since the name of the function starts with function
-function functionTestFuntion1()
+# Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
+function functionExampleFunction1()
 {
-	echo "Running example function 'functionTestFuntion1'"
+	echo "Running example function 'functionExampleFunction1'"
 }
 
-# Example test function to demonstrate the functionality. This function will be called since the name of the function starts with function
-function functionTestFuntion2()
+# Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
+function functionExampleFunction2()
 {
-        echo "Running example function 'functionTestFuntion2'"
+        echo "Running example function 'functionExamplecFuntion2'"
 }
 
 
