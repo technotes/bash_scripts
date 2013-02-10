@@ -26,7 +26,10 @@
 #
 #   USAGE:  Call the function helpFunctionPrintMenu to list a menu of all
 #           the functions present in this file. The user can then choose 
-#           to run one of these specific functions or all of them.
+#           to run one of these specific functions or all of them. Replace
+#           the example functions (functionExampleFunction1 and 
+#           functionExampleFunction2) with your own functions. Remember to
+#           declare the function with the prefix "functionX".
 
 
 # Get the filename of this script
@@ -42,6 +45,12 @@ readableFunctionName=""
 # Print a menu of functions that the user can select from
 function helpFunctionPrintMenu()
 {
+	if [[ -z ${functionsList} ]]
+	then
+		printf "ERROR 1: There are no functions declared as \"functionX\", quitting...\n"
+		exit 1
+	fi
+
         printf "1 - Excute all\n"
 
         # For each item in the functionsList array, convert the function name to a readable format then print the menu item
@@ -80,7 +89,7 @@ function helpFunctionReadAndCheckInput()
         # Print menu and get input from the user
         printf "Please choose one: "
         read REPLY
-        echo "Your have choosen: '$REPLY'"
+        printf "Your have choosen: \'${REPLY}\'\n"
         # If the users input is greater than zero and less than the number of menu items
         if [[ ${REPLY} -gt 0 && ${REPLY} -lt $(echo ${numberOfMenuItems} + 1| bc) ]]
         then
@@ -94,8 +103,8 @@ function helpFunctionReadAndCheckInput()
                 fi
         # If the users input was not listed in the menu then print an error message and quit
         else
-                echo "ERROR: Your input is not in the menu, quitting..."
-                exit
+                printf "ERROR 2: Your input is not in the menu, quitting...\n"
+                exit 2
         fi
 }
 
@@ -113,7 +122,6 @@ function helpFunctionRunAllFunctions()
 function helpFunctionRunSpecificFunction()
 {
         selecdtedMenuItem=$1
-        printf "selecdtedMenuItem = ${selecdtedMenuItem}\n"
         # Run the function found in functionsList array at position menuItem -2 since the menu starts at "2" (Execute all menu item = "1") and the array index starts at "0"
         ${functionsList[$(echo $selecdtedMenuItem -2| bc)]}
 }
@@ -121,13 +129,13 @@ function helpFunctionRunSpecificFunction()
 # Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
 function functionExampleFunction1()
 {
-	echo "Running example function 'functionExampleFunction1'"
+	printf "Running example function \'functionExampleFunction1\'\n"
 }
 
 # Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
 function functionExampleFunction2()
 {
-        echo "Running example function 'functionExamplecFuntion2'"
+        printf "Running example function \'functionExamplecFuntion2\'\n"
 }
 
 
