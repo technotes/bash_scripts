@@ -89,10 +89,22 @@ function helpFunctionReadAndCheckInput()
         # Print menu and get input from the user
         printf "Please choose one: "
         read REPLY
-        printf "Your have choosen: \'${REPLY}\'\n"
-        # If the users input is greater than zero and less than the number of menu items
+        
+	# If the users input is greater than zero and less than the number of menu items
         if [[ ${REPLY} -gt 0 && ${REPLY} -lt $(echo ${numberOfMenuItems} + 1| bc) ]]
         then
+                #Feedback the user with the selection made
+                if [[ ${REPLY} -gt 1 ]]
+                then
+                        readableFunctionName=${functionsList[$(echo ${REPLY} - 2| bc)]}
+                        helpFunctionSplitStringOnCapitalLetters
+                        printf "You have choosen: \'${REPLY} - %s'\n" "$(echo ${readableFunctionName} | awk '{gsub("function ", ""); print;}')"
+                else
+                        printf "You have choosen: \'1 - Excute all'\n"
+                fi
+
+		helpFunctionAskUserToConfirmMenuSelection
+
                 # If the user entered menu item 1 " Execute all" then run the function helpFunctionRunAllFunctions and run all functions listed in the menu
                 if [[ ${REPLY} -eq 1 ]]
                 then
@@ -105,6 +117,18 @@ function helpFunctionReadAndCheckInput()
         else
                 printf "ERROR 2: Your input is not in the menu, quitting...\n"
                 exit 2
+        fi
+}
+
+# Ask the user to confirm the menu selectaion that was made
+function helpFunctionAskUserToConfirmMenuSelection()
+{
+        printf "Do you want to continue [y/n]? "
+        read USERCONFIRMATION
+        if [[ "${USERCONFIRMATION}" != "Y" && "${USERCONFIRMATION}" != "y" ]]
+        then
+                printf "Abort.\n"
+                exit
         fi
 }
 
