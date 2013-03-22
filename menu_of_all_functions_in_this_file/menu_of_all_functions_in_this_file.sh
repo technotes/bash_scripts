@@ -45,121 +45,122 @@ readableFunctionName=""
 # Print a menu of functions that the user can select from
 function helpFunctionPrintMenu()
 {
-	if [[ -z ${functionsList} ]]
-	then
-		printf "ERROR 1: There are no functions declared as \"functionX\", quitting...\n"
-		exit 1
-	fi
+    if [[ -z ${functionsList} ]]
+    then
+        printf "ERROR 1: There are no functions declared as \"functionX\", quitting...\n"
+        exit 1
+    fi
 
-        printf "1 - Execute all\n"
+    printf "1 - Execute all\n"
 
-        # For each item in the functionsList array, convert the function name to a readable format then print the menu item
-        for index in ${!functionsList[*]}
-        do
-                readableFunctionName=${functionsList[$index]}
-                helpFunctionSplitStringOnCapitalLetters
-                # Since exit is defined as menu option 1 and the array index starts at zero add 2 to index
-                # The awk part removes 'function ' from the string to make it more readable
-                printf "%d - %s\n" $(echo $index + 2 | bc) "$(echo ${readableFunctionName} | awk '{gsub("function ", ""); print;}')"
-        done
+    # For each item in the functionsList array, convert the function name to a readable format then print the menu item
+    for index in ${!functionsList[*]}
+    do
+        readableFunctionName=${functionsList[$index]}
+        helpFunctionSplitStringOnCapitalLetters
+        # Since exit is defined as menu option 1 and the array index starts at zero add 2 to index
+        # The awk part removes 'function ' from the string to make it more readable
+        printf "%d - %s\n" $(echo $index + 2 | bc) "$(echo ${readableFunctionName} | awk '{gsub("function ", ""); print;}')"
+    done
 
-        # Call the helpFunctionReadAndCheckInput function to get and verify the users input, passing the correct menu item number, hence the $(echo ${index} + 2| bc)
-        helpFunctionReadAndCheckInput $(echo ${index} + 2| bc)
+    # Call the helpFunctionReadAndCheckInput function to get and verify the users input, passing the correct menu item number, hence the $(echo ${index} + 2| bc)
+    helpFunctionReadAndCheckInput $(echo ${index} + 2| bc)
 }
 
 # Split the function name into a readable format. Example: Input = "funcMyHelpFunction" will give the following output = "func My Help Function"
 function helpFunctionSplitStringOnCapitalLetters()
 {
-        # The awk syntax can be a bit tricky to read therefore I explain the algorithm below
-        # 0) Input the function name to awk - $(echo ${readableFunctionName} | awk ...
-        # 1) Split all characters into a character array - {split($0, chars, "");
-        # 2) Define an empty string variable in which we will store the final string - string = ""
-        # 3) Traverse all characters - for(i=1;i<=length(chars);i++)
-        # 4) If a char is an uppercase letter - if(match(chars[i], /[A-Z]/))
-        # 5)    Then store an space char " " into the string variable
-        # 6) Else store the char to the string variable as is
-        # Example: Input = "funcMyHelpFunction" will give the following output = "func My Help Function"
-        readableFunctionName=$(echo ${readableFunctionName} | awk '{n=split($0, chars, ""); string = ""; for(i=1;i<=n;i++) {if(match(chars[i], /[A-Z]/)) {string = string " " chars[i]; } else { string = string chars[i]; } }  printf("%s\n", string);}')
+    # The awk syntax can be a bit tricky to read therefore I explain the algorithm below
+    # 0) Input the function name to awk - $(echo ${readableFunctionName} | awk ...
+    # 1) Split all characters into a character array - {split($0, chars, "");
+    # 2) Define an empty string variable in which we will store the final string - string = ""
+    # 3) Traverse all characters - for(i=1;i<=length(chars);i++)
+    # 4) If a char is an uppercase letter - if(match(chars[i], /[A-Z]/))
+    # 5)    Then store an space char " " into the string variable
+    # 6) Else store the char to the string variable as is
+    # Example: Input = "funcMyHelpFunction" will give the following output = "func My Help Function"
+    readableFunctionName=$(echo ${readableFunctionName} | awk '{n=split($0, chars, ""); string = ""; for(i=1;i<=n;i++) {if(match(chars[i], /[A-Z]/)) {string = string " " chars[i]; } else { string = string chars[i]; } }  printf("%s\n", string);}')
 }
 
 # Verify that the user input is corresponding to a valid option from the menu
 function helpFunctionReadAndCheckInput()
 {
-        numberOfMenuItems=$1
-        # Print menu and get input from the user
-        printf "Please choose one: "
-        read REPLY
+    numberOfMenuItems=$1
+    # Print menu and get input from the user
+    printf "Please choose one: "
+    read REPLY
         
-	# If the users input is greater than zero and less than the number of menu items
-        if [[ ${REPLY} -gt 0 && ${REPLY} -lt $(echo ${numberOfMenuItems} + 1| bc) ]]
+    # If the users input is greater than zero and less than the number of menu items
+    if [[ ${REPLY} -gt 0 && ${REPLY} -lt $(echo ${numberOfMenuItems} + 1| bc) ]]
+    then
+        #Feedback the user with the selection made
+        if [[ ${REPLY} -gt 1 ]]
         then
-                #Feedback the user with the selection made
-                if [[ ${REPLY} -gt 1 ]]
-                then
-                        readableFunctionName=${functionsList[$(echo ${REPLY} - 2| bc)]}
-                        helpFunctionSplitStringOnCapitalLetters
-                        printf "You have choosen: \'${REPLY} - %s'\n" "$(echo ${readableFunctionName} | awk '{gsub("function ", ""); print;}')"
-                else
-                        printf "You have choosen: \'1 - Excute all'\n"
-                fi
-
-		helpFunctionAskUserToConfirmMenuSelection
-
-                # If the user entered menu item 1 " Execute all" then run the function helpFunctionRunAllFunctions and run all functions listed in the menu
-                if [[ ${REPLY} -eq 1 ]]
-                then
-                        helpFunctionRunAllFunctions
-                # If the user entered one of the other menu items then call helpFunctionRunSpecificFunction and run the specific function selected from the menu
-                else
-                        helpFunctionRunSpecificFunction ${REPLY}
-                fi
-        # If the users input was not listed in the menu then print an error message and quit
+            readableFunctionName=${functionsList[$(echo ${REPLY} - 2| bc)]}
+            helpFunctionSplitStringOnCapitalLetters
+            printf "You have choosen: \'${REPLY} - %s'\n" "$(echo ${readableFunctionName} | awk '{gsub("function ", ""); print;}')"
         else
-                printf "ERROR 2: Your input is not in the menu, quitting...\n"
-                exit 2
+            printf "You have choosen: \'1 - Excute all'\n"
         fi
+
+        helpFunctionAskUserToConfirmMenuSelection
+
+        # If the user entered menu item 1 " Execute all" then run the function helpFunctionRunAllFunctions and run all functions listed in the menu
+        if [[ ${REPLY} -eq 1 ]]
+        then
+            helpFunctionRunAllFunctions
+            # If the user entered one of the other menu items then call helpFunctionRunSpecificFunction and run the specific function selected from the menu
+        else
+            helpFunctionRunSpecificFunction ${REPLY}
+        fi
+        # If the users input was not listed in the menu then print an error message and quit
+    else
+        printf "ERROR 2: Your input is not in the menu, quitting...\n"
+        exit 2
+    fi
 }
 
 # Ask the user to confirm the menu selectaion that was made
 function helpFunctionAskUserToConfirmMenuSelection()
 {
-        printf "Do you want to continue [y/n]? "
-        read USERCONFIRMATION
-        if [[ "${USERCONFIRMATION}" != "Y" && "${USERCONFIRMATION}" != "y" ]]
-        then
-                printf "Abort.\n"
-                exit
-        fi
+    printf "Do you want to continue [y/n]? "
+    read USERCONFIRMATION
+    
+    if [[ "${USERCONFIRMATION}" != "Y" && "${USERCONFIRMATION}" != "y" ]]
+    then
+        printf "Abort.\n"
+        exit
+    fi
 }
 
 # Run all functions in the functionsList array
 function helpFunctionRunAllFunctions()
 {
-        # For each item in the functionsList array, run that function
-        for index in ${!functionsList[*]}
-        do
-                ${functionsList[$index]}
-        done
+    # For each item in the functionsList array, run that function
+    for index in ${!functionsList[*]}
+    do
+        ${functionsList[$index]}
+    done
 }
 
 # Run the function in the functionList array corresponding to the function selected from the menu
 function helpFunctionRunSpecificFunction()
 {
-        selecdtedMenuItem=$1
-        # Run the function found in functionsList array at position menuItem -2 since the menu starts at "2" (Execute all menu item = "1") and the array index starts at "0"
-        ${functionsList[$(echo $selecdtedMenuItem -2| bc)]}
+    selecdtedMenuItem=$1
+    # Run the function found in functionsList array at position menuItem -2 since the menu starts at "2" (Execute all menu item = "1") and the array index starts at "0"
+    ${functionsList[$(echo $selecdtedMenuItem -2| bc)]}
 }
 
 # Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
 function functionExampleFunction1()
 {
-	printf "Running example function \'functionExampleFunction1\'\n"
+    printf "Running example function \'functionExampleFunction1\'\n"
 }
 
 # Example function to demonstrate the functionality. This function will be called since the name of the function starts with function
 function functionExampleFunction2()
 {
-        printf "Running example function \'functionExamplecFuntion2\'\n"
+    printf "Running example function \'functionExamplecFuntion2\'\n"
 }
 
 
