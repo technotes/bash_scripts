@@ -1,0 +1,28 @@
+Purpose of the script:
+The purpose of this bash script is to generate a menu of all the functions named using a name convention matching “function functionX” listed in the same file. 
+
+The menu functionality works as follows:
+1) The script gets the file name of itself.
+2) The script looks in the same file for all strings matching “function function” and stores all matches in an array.
+3) The user is presented with a menu with an “Execute all” option followed by one option for each function listed in the file matching the string “function function”. Also the menu is converting the function names into something more readable in the menu (it splits on capital letters in the function name, example: functionMySimpleFunction” would read “My Simple Function” in the menu).
+4) The user can select to execute all functions listed in the script or one specific function.
+
+The below helpfunctions are the functions that creates the menu:
+function helpFunctionPrintMenu() # <---- This is the "main" function of the menu functions. Trigger the menu by calling this function.
+function helpFunctionSplitStringOnCapitalLetters()
+function helpFunctionReadAndCheckInput()
+function helpFunctionRunAllFunctions()
+function helpFunctionRunSpecificFunction()
+
+Example:
+The script scans the file in which it exists for all functions named “function functionX” and creates a menu of them. Below is a set of example functions, replace these with your own functions but remember to declare them using the “function functionX” naming convention. Example: “function functionMyFunction”.
+function functionExampleFunction1()
+function functionExampleFunction2()
+
+This would give the following output:
+$./menu_of_all_functions_in_this_file.sh
+1 - Execute all
+2 - Example Function1
+3 - Example Function2
+Please choose one:
+

@@ -51,7 +51,7 @@ function helpFunctionPrintMenu()
 		exit 1
 	fi
 
-        printf "1 - Excute all\n"
+        printf "1 - Execute all\n"
 
         # For each item in the functionsList array, convert the function name to a readable format then print the menu item
         for index in ${!functionsList[*]}
